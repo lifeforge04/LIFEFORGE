@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VITALE — Living Bonsai Sanctuary</title>
+  <link rel="stylesheet" href="./world.css">
+</head>
+<body class="theme-day">
+  <!-- Ambient Flash Overlay for growth shockwaves -->
+  <div id="ambientFlash" class="ambient-flash-overlay"></div>
+
+  <div class="viewport-wrapper">
+    <!-- Atmospheric Sky Glow & Star Canvas -->
+    <div class="sky-ambient-glow"></div>
+
+    <!-- Top HUD Banner -->
+    <header class="top-hud glass-hud-panel">
+      <!-- Brand & Standing Level -->
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #020617; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 0 16px rgba(245,158,11,0.5);">
+          V
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h1 style="font-family: var(--font-serif); font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">
+              VITALE
+            </h1>
+            <span id="hudStageBadge" style="font-family: var(--font-mono); font-size: 10px; background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 2px 6px; border-radius: 6px; text-transform: uppercase;">
+              Stage 2: Young Growing Sapling
+            </span>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8;">Real-life habits physically grow specific branches & trunk</p>
+        </div>
+
+        <div style="padding-left: 14px; border-left: 1px solid rgba(255,255,255,0.1); margin-left: 8px;">
+          <span style="font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 700; display: block;">Standing</span>
+          <span id="hudLevel" style="font-family: var(--font-serif); font-size: 18px; font-weight: 800; color: #fde047;">Level 1</span>
+        </div>
+      </div>
+
+      <!-- Non-Linear XP Bar & Standing -->
+      <div style="display: flex; flex-direction: column; min-width: 170px; margin: 0 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: #94a3b8; margin-bottom: 4px;">
+          <span>Progress</span>
+          <span id="hudXP" style="color: #fbbf24;">0 XP (0/100 to Lvl 2)</span>
+        </div>
+        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+          <div id="hudXPBar" style="width: 15%; height: 100%; background: linear-gradient(90deg, #f59e0b, #fde047); box-shadow: 0 0 10px #f59e0b;"></div>
+        </div>
+      </div>
+
+      <!-- Quick Demo Presets for Testing Branches & Audio/Speech -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <select id="presetSelect" style="background: rgba(30,41,59,0.9); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 6px 10px; font-size: 12px; cursor: pointer; outline: none;">
+          <option value="sprout">🌱 Stage: Nascent Sprout (0 XP)</option>
+          <option value="mind_only">📖 Testing: Study Only (Upper-Right Grows!)</option>
+          <option value="body_only">🏋️ Testing: Gym Only (Lower-Right Grows!)</option>
+          <option value="balanced">🌳 Stage: Fully Blossomed Tree</option>
+        </select>
+
+        <!-- Time of Day -->
+        <div style="display: flex; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 2px;">
+          <button class="tod-btn" data-tod="day" style="background: none; border: none; padding: 5px 8px; cursor: pointer; font-size: 12px;" title="Daylight">☀️</button>
+          <button class="tod-btn" data-tod="dusk" style="background: none; border: none; padding: 5px 8px; cursor: pointer; font-size: 12px;" title="Twilight Dusk">🌅</button>
+          <button class="tod-btn" data-tod="night" style="background: none; border: none; padding: 5px 8px; cursor: pointer; font-size: 12px;" title="Starry Night">🌙</button>
+        </div>
+
+        <!-- Narrator Voice Toggle -->
+        <button id="narratorToggle" style="background: rgba(30,41,59,0.8); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer;">
+          🔊 Narrator
+        </button>
+
+        <!-- Streak & Essence Badges -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 4px; background: rgba(154,52,18,0.25); border: 1px solid rgba(234,88,12,0.4); color: #fdba74; padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700;">
+            <span>🔥</span>
+            <span id="hudStreak">3d</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; background: rgba(180,83,9,0.25); border: 1px solid rgba(245,158,11,0.4); color: #fde047; padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; font-family: var(--font-mono);">
+            <span>🪙</span>
+            <span id="hudEssence">45</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Side Branch Status Indicators (Left & Right) -->
+    <aside class="side-branch-guide left">
+      <!-- Craft: Upper-Left -->
+      <div class="branch-stat-pill glass-hud-panel" style="border-left: 3px solid var(--color-craft);">
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: #fbbf24;">
+          <span>⚙️ Forgeworks (Craft)</span>
+          <span id="stat-craft-xp" style="font-family: var(--font-mono); font-size: 11px;">0 XP</span>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin: 2px 0 6px;">Upper-Left Branch</div>
+        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <div id="stat-craft-bar" style="width: 0%; height: 100%; background: var(--color-craft); transition: width 0.6s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Social: Lower-Left -->
+      <div class="branch-stat-pill glass-hud-panel" style="border-left: 3px solid var(--color-social);">
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: #fdba74;">
+          <span>❤️ Kinship (Social)</span>
+          <span id="stat-social-xp" style="font-family: var(--font-mono); font-size: 11px;">0 XP</span>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin: 2px 0 6px;">Lower-Left Branch</div>
+        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <div id="stat-social-bar" style="width: 0%; height: 100%; background: var(--color-social); transition: width 0.6s ease;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="side-branch-guide right">
+      <!-- Mind: Upper-Right -->
+      <div class="branch-stat-pill glass-hud-panel" style="border-right: 3px solid var(--color-mind);">
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: #93c5fd;">
+          <span>🧠 Insight (Mind)</span>
+          <span id="stat-mind-xp" style="font-family: var(--font-mono); font-size: 11px;">0 XP</span>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin: 2px 0 6px;">Upper-Right Branch</div>
+        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <div id="stat-mind-bar" style="width: 0%; height: 100%; background: var(--color-mind); transition: width 0.6s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Body: Lower-Right -->
+      <div class="branch-stat-pill glass-hud-panel" style="border-right: 3px solid var(--color-body);">
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: #fca5a5;">
+          <span>💪 Vitality (Body)</span>
+          <span id="stat-body-xp" style="font-family: var(--font-mono); font-size: 11px;">0 XP</span>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin: 2px 0 6px;">Lower-Right Branch</div>
+        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <div id="stat-body-bar" style="width: 0%; height: 100%; background: var(--color-body); transition: width 0.6s ease;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Living Tree 3D Parallax Stage -->
+    <div class="plant-stage">
+      <div id="bonsaiContainer" class="bonsai-svg-container sway-natural">
+        <svg viewBox="0 0 600 560" width="100%" height="100%" style="overflow: visible;">
+          <defs>
+            <!-- Wood bark gradient -->
+            <linearGradient id="barkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#5c3a21" />
+              <stop offset="50%" stopColor="#3d2514" />
+              <stop offset="100%" stopColor="#27160a" />
+            </linearGradient>
+
+            <!-- Ceramic Bonsai Pot gradient -->
+            <linearGradient id="potGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1e293b" />
+              <stop offset="50%" stopColor="#334155" />
+              <stop offset="100%" stopColor="#0f172a" />
+            </linearGradient>
+
+            <!-- Domain Leaf Gradients -->
+            <radialGradient id="mindLeafGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#93c5fd" />
+              <stop offset="100%" stopColor="#2563eb" />
+            </radialGradient>
+
+            <radialGradient id="bodyLeafGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#fca5a5" />
+              <stop offset="100%" stopColor="#dc2626" />
+            </radialGradient>
+
+            <radialGradient id="craftLeafGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#fde047" />
+              <stop offset="100%" stopColor="#d97706" />
+            </radialGradient>
+
+            <radialGradient id="socialLeafGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#fdba74" />
+              <stop offset="100%" stopColor="#ea580c" />
+            </radialGradient>
+          </defs>
+
+          <!-- ================= BASE / BONSAI POT ================= -->
+          <g id="treeBase" transform="translate(0, 40)">
+            <!-- Pot Shadow -->
+            <ellipse cx="300" cy="480" rx="140" ry="24" fill="rgba(0,0,0,0.5)" />
+
+            <!-- Ceramic Tray / Planter -->
+            <path d="M 180,455 Q 170,485 200,490 L 400,490 Q 430,485 420,455 Z" fill="url(#potGrad)" stroke="#475569" stroke-width="2" />
+            <!-- Rim -->
+            <ellipse cx="300" cy="455" rx="120" ry="12" fill="#475569" stroke="#64748b" stroke-width="1.5" />
+            <!-- Moss Mound -->
+            <path d="M 195,455 Q 300,415 405,455 Z" fill="#14532d" stroke="#166534" stroke-width="2" />
+            <!-- Organic Roots Deepening with Daily Consistency -->
+            <g id="treeRoots" style="opacity: 0.6; transition: opacity 0.8s ease;">
+              <path d="M 285,445 Q 260,460 230,465" fill="none" stroke="#3d2514" stroke-width="4" stroke-linecap="round" />
+              <path d="M 310,445 Q 340,460 370,465" fill="none" stroke="#3d2514" stroke-width="4" stroke-linecap="round" />
+            </g>
+            <!-- Small moss accent pebbles -->
+            <circle cx="230" cy="445" r="4" fill="#22c55e" opacity="0.6" />
+            <circle cx="360" cy="448" r="5" fill="#22c55e" opacity="0.6" />
+            <circle cx="290" cy="435" r="3" fill="#86efac" opacity="0.7" />
+          </g>
+
+          <!-- ================= TRUNK ================= -->
+          <g id="treeTrunk">
+            <!-- Central gnarly Bonsai Trunk -->
+            <path id="mainTrunkPath" d="M 285,455 Q 260,370 295,290 Q 305,250 300,210 Q 300,180 300,140"
+                  fill="none" stroke="url(#barkGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"
+                  style="transition: stroke-width 0.8s ease;" />
+            <!-- Trunk Bark Texture Lines -->
+            <path d="M 280,450 Q 255,370 290,290 Q 300,250 295,210"
+                  fill="none" stroke="#221207" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+            <path d="M 295,445 Q 275,370 305,290 Q 312,250 305,210"
+                  fill="none" stroke="#784725" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+          </g>
+
+          <!-- ================= BRANCH 1: MIND / INSIGHT (Upper-Right) ================= -->
+          <g id="branchMindGroup" class="breathe-branch">
+            <!-- Main Branch Stroke -->
+            <path id="branchMindPath" class="branch-path branch-mind-color"
+                  d="M 298,240 Q 350,210 400,195 Q 460,180 495,145"
+                  stroke-width="14" />
+            <!-- Secondary Twigs -->
+            <path d="M 390,200 Q 430,165 440,125" class="branch-path branch-mind-color" stroke-width="7" />
+            <path d="M 440,185 Q 480,180 510,165" class="branch-path branch-mind-color" stroke-width="6" />
+
+            <!-- Mind Leaves (Unfurl sequentially with Mind/Study XP) -->
+            <g class="leaf mindLeaves" transform="translate(440, 125)"><path d="M 0,0 Q 15,-15 30,-5 Q 15,15 0,0" fill="url(#mindLeafGrad)" /></g>
+            <g class="leaf mindLeaves" transform="translate(495, 145)"><path d="M 0,0 Q 18,-18 35,-6 Q 18,18 0,0" fill="url(#mindLeafGrad)" /></g>
+            <g class="leaf mindLeaves" transform="translate(510, 165)"><path d="M 0,0 Q 15,-10 28,0 Q 15,15 0,0" fill="url(#mindLeafGrad)" /></g>
+            <g class="leaf mindLeaves" transform="translate(415, 175)"><path d="M 0,0 Q 10,-18 25,-10 Q 15,10 0,0" fill="url(#mindLeafGrad)" /></g>
+            <g class="leaf mindLeaves" transform="translate(460, 160)"><path d="M 0,0 Q 12,-15 28,-4 Q 15,12 0,0" fill="url(#mindLeafGrad)" /></g>
+            <g class="leaf mindLeaves" transform="translate(430, 145)"><path d="M 0,0 Q 8,-14 20,-5 Q 10,10 0,0" fill="url(#mindLeafGrad)" /></g>
+
+            <!-- Mind Radiant Flower Bloom -->
+            <g class="flower-bloom mindFlowers" transform="translate(495, 145)">
+              <circle cx="0" cy="0" r="8" fill="#fde047" />
+              <circle cx="0" cy="-12" r="6" fill="#93c5fd" opacity="0.9" />
+              <circle cx="12" cy="0" r="6" fill="#93c5fd" opacity="0.9" />
+              <circle cx="0" cy="12" r="6" fill="#93c5fd" opacity="0.9" />
+              <circle cx="-12" cy="0" r="6" fill="#93c5fd" opacity="0.9" />
+              <circle cx="0" cy="0" r="4" fill="#ffffff" />
+            </g>
+          </g>
+
+          <!-- ================= BRANCH 2: BODY / VITALITY (Lower-Right) ================= -->
+          <g id="branchBodyGroup" class="breathe-branch">
+            <path id="branchBodyPath" class="branch-path branch-body-color"
+                  d="M 292,305 Q 360,300 420,320 Q 480,345 520,340"
+                  stroke-width="16" />
+            <!-- Secondary Twigs -->
+            <path d="M 390,310 Q 435,285 465,275" class="branch-path branch-body-color" stroke-width="7" />
+            <path d="M 460,335 Q 490,370 520,380" class="branch-path branch-body-color" stroke-width="6" />
+
+            <!-- Body Leaves (Gym, sport, health) -->
+            <g class="leaf bodyLeaves" transform="translate(465, 275)"><path d="M 0,0 Q 15,-12 32,-2 Q 15,16 0,0" fill="url(#bodyLeafGrad)" /></g>
+            <g class="leaf bodyLeaves" transform="translate(520, 340)"><path d="M 0,0 Q 18,-15 36,-4 Q 18,18 0,0" fill="url(#bodyLeafGrad)" /></g>
+            <g class="leaf bodyLeaves" transform="translate(520, 380)"><path d="M 0,0 Q 14,-10 26,2 Q 12,14 0,0" fill="url(#bodyLeafGrad)" /></g>
+            <g class="leaf bodyLeaves" transform="translate(435, 290)"><path d="M 0,0 Q 12,-16 26,-8 Q 14,12 0,0" fill="url(#bodyLeafGrad)" /></g>
+            <g class="leaf bodyLeaves" transform="translate(490, 335)"><path d="M 0,0 Q 14,-12 30,-3 Q 16,15 0,0" fill="url(#bodyLeafGrad)" /></g>
+            <g class="leaf bodyLeaves" transform="translate(470, 355)"><path d="M 0,0 Q 10,-12 24,-4 Q 12,12 0,0" fill="url(#bodyLeafGrad)" /></g>
+
+            <!-- Body Vitality Red Lotus Bloom -->
+            <g class="flower-bloom bodyFlowers" transform="translate(520, 340)">
+              <circle cx="0" cy="0" r="9" fill="#fbbf24" />
+              <circle cx="0" cy="-14" r="7" fill="#f87171" opacity="0.9" />
+              <circle cx="14" cy="0" r="7" fill="#f87171" opacity="0.9" />
+              <circle cx="0" cy="14" r="7" fill="#f87171" opacity="0.9" />
+              <circle cx="-14" cy="0" r="7" fill="#f87171" opacity="0.9" />
+              <circle cx="0" cy="0" r="4" fill="#ffffff" />
+            </g>
+          </g>
+
+          <!-- ================= BRANCH 3: CRAFT / FORGEWORKS (Upper-Left) ================= -->
+          <g id="branchCraftGroup" class="breathe-branch">
+            <path id="branchCraftPath" class="branch-path branch-craft-color"
+                  d="M 298,220 Q 240,190 190,175 Q 130,155 90,125"
+                  stroke-width="14" />
+            <!-- Secondary Twigs -->
+            <path d="M 210,180 Q 165,145 145,105" class="branch-path branch-craft-color" stroke-width="7" />
+            <path d="M 140,165 Q 100,165 70,150" class="branch-path branch-craft-color" stroke-width="6" />
+
+            <!-- Craft Leaves (Code, building, writing) -->
+            <g class="leaf craftLeaves" transform="translate(145, 105)"><path d="M 0,0 Q -15,-15 -30,-5 Q -15,15 0,0" fill="url(#craftLeafGrad)" /></g>
+            <g class="leaf craftLeaves" transform="translate(90, 125)"><path d="M 0,0 Q -18,-18 -35,-6 Q -18,18 0,0" fill="url(#craftLeafGrad)" /></g>
+            <g class="leaf craftLeaves" transform="translate(70, 150)"><path d="M 0,0 Q -15,-10 -28,0 Q -15,15 0,0" fill="url(#craftLeafGrad)" /></g>
+            <g class="leaf craftLeaves" transform="translate(170, 155)"><path d="M 0,0 Q -12,-16 -26,-8 Q -14,12 0,0" fill="url(#craftLeafGrad)" /></g>
+            <g class="leaf craftLeaves" transform="translate(120, 140)"><path d="M 0,0 Q -14,-14 -30,-4 Q -16,14 0,0" fill="url(#craftLeafGrad)" /></g>
+            <g class="leaf craftLeaves" transform="translate(155, 125)"><path d="M 0,0 Q -10,-12 -22,-3 Q -12,12 0,0" fill="url(#craftLeafGrad)" /></g>
+
+            <!-- Craft Golden Blossom -->
+            <g class="flower-bloom craftFlowers" transform="translate(90, 125)">
+              <circle cx="0" cy="0" r="8" fill="#f59e0b" />
+              <circle cx="0" cy="-12" r="6" fill="#fde047" opacity="0.9" />
+              <circle cx="12" cy="0" r="6" fill="#fde047" opacity="0.9" />
+              <circle cx="0" cy="12" r="6" fill="#fde047" opacity="0.9" />
+              <circle cx="-12" cy="0" r="6" fill="#fde047" opacity="0.9" />
+              <circle cx="0" cy="0" r="4" fill="#ffffff" />
+            </g>
+          </g>
+
+          <!-- ================= BRANCH 4: SOCIAL / KINSHIP (Lower-Left) ================= -->
+          <g id="branchSocialGroup" class="breathe-branch">
+            <path id="branchSocialPath" class="branch-path branch-social-color"
+                  d="M 288,320 Q 220,315 160,335 Q 100,360 65,355"
+                  stroke-width="16" />
+            <!-- Secondary Twigs -->
+            <path d="M 190,325 Q 145,295 125,280" class="branch-path branch-social-color" stroke-width="7" />
+            <path d="M 120,350 Q 80,385 50,395" class="branch-path branch-social-color" stroke-width="6" />
+
+            <!-- Social Leaves (Friends, family, gatherings) -->
+            <g class="leaf socialLeaves" transform="translate(125, 280)"><path d="M 0,0 Q -15,-12 -32,-2 Q -15,16 0,0" fill="url(#socialLeafGrad)" /></g>
+            <g class="leaf socialLeaves" transform="translate(65, 355)"><path d="M 0,0 Q -18,-15 -36,-4 Q -18,18 0,0" fill="url(#socialLeafGrad)" /></g>
+            <g class="leaf socialLeaves" transform="translate(50, 395)"><path d="M 0,0 Q -14,-10 -26,2 Q -12,14 0,0" fill="url(#socialLeafGrad)" /></g>
+            <g class="leaf socialLeaves" transform="translate(155, 305)"><path d="M 0,0 Q -12,-16 -26,-8 Q -14,12 0,0" fill="url(#socialLeafGrad)" /></g>
+            <g class="leaf socialLeaves" transform="translate(95, 350)"><path d="M 0,0 Q -14,-12 -30,-3 Q -16,15 0,0" fill="url(#socialLeafGrad)" /></g>
+
+            <!-- Social Warm Apricot Bloom -->
+            <g class="flower-bloom socialFlowers" transform="translate(65, 355)">
+              <circle cx="0" cy="0" r="9" fill="#ea580c" />
+              <circle cx="0" cy="-13" r="6.5" fill="#fdba74" opacity="0.9" />
+              <circle cx="13" cy="0" r="6.5" fill="#fdba74" opacity="0.9" />
+              <circle cx="0" cy="13" r="6.5" fill="#fdba74" opacity="0.9" />
+              <circle cx="-13" cy="0" r="6.5" fill="#fdba74" opacity="0.9" />
+              <circle cx="0" cy="0" r="4" fill="#ffffff" />
+            </g>
+          </g>
+
+          <!-- Top Crown Shimmer (Crown Apex) -->
+          <g transform="translate(300, 140)">
+            <circle cx="0" cy="0" r="10" fill="#34d399" opacity="0.8" />
+            <circle cx="0" cy="0" r="22" fill="none" stroke="#6ee7b7" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bottom Action Dock: The Real Habits that physically grow the tree -->
+    <div class="bottom-dock glass-hud-panel">
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-right: 4px; letter-spacing: 0.05em;">
+        Perform Real Habit:
+      </div>
+
+      <!-- Mind Habit -->
+      <button id="btnStudy" class="habit-action-btn btn-mind">
+        <span>📖</span>
+        <span>Study & Research (Mind)</span>
+      </button>
+
+      <!-- Body Habit -->
+      <button id="btnGym" class="habit-action-btn btn-body">
+        <span>🏋️</span>
+        <span>Gym & Training (Body)</span>
+      </button>
+
+      <!-- Craft Habit -->
+      <button id="btnCode" class="habit-action-btn btn-craft">
+        <span>💻</span>
+        <span>Build & Code (Craft)</span>
+      </button>
+
+      <!-- Social Habit -->
+      <button id="btnSocial" class="habit-action-btn btn-social">
+        <span>☕</span>
+        <span>Gather & Social (Kinship)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Real Photo Verification Modal -->
+  <div id="proofModal" class="modal-overlay">
+    <div class="proof-modal-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="modalDomainTag" class="verified-stamp">PROOF OF HABIT</span>
+        </div>
+        <button id="closeModalBtn" style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer;">✕</button>
+      </div>
+
+      <h3 id="modalHabitTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Gym & Strength Training</h3>
+      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;">
+        Upload a real photo to verify your real-world effort. The physical branch will surge with life.
+      </p>
+
+      <!-- Upload Drop Zone / Camera Preview -->
+      <div id="uploadPlaceholder" style="width: 100%; height: 180px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: rgba(15,23,42,0.6); margin-bottom: 14px;">
+        <span style="font-size: 32px;">📷</span>
+        <span style="font-size: 13px; font-weight: 600; color: #f1f5f9;">Take Camera Photo or Click to Upload</span>
+        <span style="font-size: 11px; color: #64748b;">(Or pick an instant sample verification photo below)</span>
+      </div>
+
+      <input type="file" id="photoFileInput" accept="image/*" style="display: none;">
+
+      <!-- Image Preview Container -->
+      <img id="proofPreviewImg" src="" alt="Proof Preview" style="display: none; width: 100%; height: 180px; object-fit: cover; border-radius: 18px; margin-bottom: 14px; border: 2px solid #22c55e;">
+
+      <!-- Instant Demo Photo Buttons for Zero-Friction Testing -->
+      <div style="margin-bottom: 16px;">
+        <span style="display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; font-weight: 600;">
+          Instant Demo Verification Samples (Try both valid & invalid):
+        </span>
+        <div style="display: flex; gap: 8px;">
+          <button id="sampleGymBtn" style="flex: 1; padding: 6px 10px; font-size: 11px; background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: #fca5a5; border-radius: 10px; cursor: pointer;">
+            🏋️ Gym Photo
+          </button>
+          <button id="sampleStudyBtn" style="flex: 1; padding: 6px 10px; font-size: 11px; background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3); color: #93c5fd; border-radius: 10px; cursor: pointer;">
+            📖 Study Photo
+          </button>
+          <button id="sampleCraftBtn" style="flex: 1; padding: 6px 10px; font-size: 11px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #fde047; border-radius: 10px; cursor: pointer;">
+            💻 Code Photo
+          </button>
+          <button id="sampleCatBtn" style="flex: 1; padding: 6px 10px; font-size: 11px; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: #c084fc; border-radius: 10px; cursor: pointer;" title="Wrong Photo (Cat on rug) to test AI rejection">
+            🐱 Wrong: Cat
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Scanning & Verification Result Box -->
+      <div id="verificationFeedback" style="display: none; margin-bottom: 14px; border-radius: 14px; padding: 12px; font-size: 12px;"></div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 10px;">
+        <button id="cancelVerifyBtn" style="flex: 1; padding: 10px 16px; border-radius: 12px; background: rgba(30,41,59,0.8); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-weight: 600; font-size: 13px; cursor: pointer;">
+          Cancel
+        </button>
+        <button id="confirmVerifyBtn" disabled style="flex: 2; padding: 10px 16px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border: none; color: #020617; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 0 20px rgba(245,158,11,0.4);">
+          🌿 Verify & Physically Grow Branch (+50 XP)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./world.js"></script>
+</body>
+</html>

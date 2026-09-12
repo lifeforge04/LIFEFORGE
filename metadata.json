@@ -1,0 +1,6 @@
+{
+  "name": "LIFEFORGE — Living World Bonsai RPG",
+  "description": "A living world RPG where real-life daily habits, fitness, study, and discipline physically plant a seed and grow your living bonsai tree through authentic photo proof and streak flames.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
