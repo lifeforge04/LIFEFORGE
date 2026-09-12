@@ -1,0 +1,475 @@
+/* ===================================================================
+   VITALE SANCTUARY VISUAL — world.css
+   Tactile Styling, Glassmorphism, Ambient Sway, Lighting & Particles
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Domain Color Palettes */
+  --color-mind: #60a5fa;
+  --color-craft: #f59e0b;
+  --color-body: #f87171;
+  --color-social: #fb923c;
+  --color-balance: #34d399;
+
+  --bg-gradient: radial-gradient(circle at 50% 35%, #18283a 0%, #0d1723 60%, #070c13 100%);
+  --sky-glow: rgba(96, 165, 250, 0.12);
+}
+
+body.theme-day {
+  --bg-gradient: radial-gradient(circle at 50% 25%, #2a4365 0%, #17253b 65%, #0b1320 100%);
+  --sky-glow: rgba(251, 191, 36, 0.18);
+}
+
+body.theme-dusk {
+  --bg-gradient: radial-gradient(circle at 50% 30%, #4a2545 0%, #2b1735 60%, #0c0915 100%);
+  --sky-glow: rgba(244, 114, 182, 0.18);
+}
+
+body.theme-night {
+  --bg-gradient: radial-gradient(circle at 50% 40%, #0f172a 0%, #060911 70%, #020408 100%);
+  --sky-glow: rgba(129, 140, 248, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-gradient);
+  color: #f1f5f9;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+  transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Atmospheric Sky & Distant Mountain Layers */
+.viewport-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  perspective: 1000px;
+}
+
+.sky-ambient-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  height: 450px;
+  background: radial-gradient(ellipse at center, var(--sky-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 1.5s ease;
+}
+
+/* Ambient Floating Fireflies / Light Motes */
+.firefly-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Parallax Plant Tilt Container */
+.plant-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.bonsai-svg-container {
+  width: 100%;
+  max-width: 780px;
+  height: 80vh;
+  max-height: 640px;
+  filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.65));
+  transition: transform 0.5s ease;
+}
+
+/* Ambient Wind Sway */
+@keyframes naturalSway {
+  0%, 100% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  33% {
+    transform: rotate(0.8deg) skewX(0.4deg);
+  }
+  66% {
+    transform: rotate(-0.7deg) skewX(-0.3deg);
+  }
+}
+
+@keyframes branchBreathe {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.015) rotate(0.5deg);
+  }
+}
+
+.sway-natural {
+  transform-origin: 300px 480px;
+  animation: naturalSway 8s ease-in-out infinite;
+}
+
+.breathe-branch {
+  transform-origin: center bottom;
+  animation: branchBreathe 6s ease-in-out infinite;
+}
+
+/* Organic Tree Trunk & Branches */
+.branch-path {
+  fill: none;
+  stroke: #4a3324;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.branch-mind-color {
+  stroke: #2e4a62;
+  filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.4));
+}
+
+.branch-craft-color {
+  stroke: #5c421b;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+}
+
+.branch-body-color {
+  stroke: #5a2e2b;
+  filter: drop-shadow(0 0 6px rgba(248, 113, 113, 0.4));
+}
+
+.branch-social-color {
+  stroke: #583c21;
+  filter: drop-shadow(0 0 6px rgba(251, 146, 60, 0.4));
+}
+
+/* Tree Leaves & Blossoms */
+.leaf {
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  cursor: pointer;
+}
+
+.leaf.unfurled {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.leaf:hover {
+  filter: brightness(1.3) drop-shadow(0 0 8px currentColor);
+}
+
+.flower-bloom {
+  opacity: 0;
+  transform: scale(0) rotate(-45deg);
+  transform-origin: center;
+  transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.flower-bloom.bloomed {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.7));
+}
+
+/* Tactile HUD Panels (Glassmorphism & Crisp Typography) */
+.glass-hud-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.45);
+  border-radius: 18px;
+}
+
+.top-hud {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 36px);
+  max-width: 960px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+}
+
+/* Action Habit Trigger Dock at Bottom */
+.bottom-dock {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+}
+
+.habit-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(30, 41, 59, 0.85);
+  color: #f8fafc;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.habit-action-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.4);
+}
+
+.habit-action-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.btn-mind:hover {
+  border-color: var(--color-mind);
+  box-shadow: 0 0 18px rgba(96, 165, 250, 0.45);
+}
+
+.btn-body:hover {
+  border-color: var(--color-body);
+  box-shadow: 0 0 18px rgba(248, 113, 113, 0.45);
+}
+
+.btn-craft:hover {
+  border-color: var(--color-craft);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.45);
+}
+
+.btn-social:hover {
+  border-color: var(--color-social);
+  box-shadow: 0 0 18px rgba(251, 146, 60, 0.45);
+}
+
+/* Branch Growth HUD Indicators on Left & Right Sides */
+.side-branch-guide {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 25;
+  pointer-events: auto;
+}
+
+.side-branch-guide.left {
+  left: 20px;
+}
+
+.side-branch-guide.right {
+  right: 20px;
+}
+
+.branch-stat-pill {
+  padding: 10px 14px;
+  border-radius: 16px;
+  min-width: 145px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.branch-stat-pill:hover {
+  transform: scale(1.05);
+}
+
+/* Particles & Animations */
+.sanctuary-particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: particleBurst 0.9s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes particleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.2);
+  }
+}
+
+.sanctuary-floating-xp {
+  position: fixed;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 800;
+  pointer-events: none;
+  z-index: 9999;
+  animation: floatUpFade 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes floatUpFade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -20px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -75px) scale(0.9);
+  }
+}
+
+/* Tree Pulse on Growth */
+.tree-pulse {
+  animation: treeGrowShockwave 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes treeGrowShockwave {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.035);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Ambient Flash Overlay */
+.ambient-flash-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 999;
+}
+
+.ambient-flash-overlay.active {
+  opacity: 1;
+}
+
+/* Modal Overlay for Photo Verification */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 8, 15, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 16px;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.proof-modal-card {
+  width: 100%;
+  max-width: 480px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7);
+  transform: scale(0.95) translateY(15px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.open .proof-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.verified-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1.5px solid #22c55e;
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.12);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: rotate(-3deg);
+}
+
+/* Verification Result Banners */
+.verification-box {
+  transition: all 0.3s ease;
+  line-height: 1.5;
+}
+
+.verification-box.pending {
+  background: rgba(30, 58, 138, 0.4);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+}
+
+.verification-box.verified {
+  background: rgba(6, 78, 59, 0.45);
+  border: 1px solid #10b981;
+  color: #ecfdf5;
+}
+
+.verification-box.rejected {
+  background: rgba(136, 19, 55, 0.45);
+  border: 1px solid #f43f5e;
+  color: #ffe4e6;
+}
